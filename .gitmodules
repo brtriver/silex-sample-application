@@ -1,0 +1,9 @@
+[submodule "vendor/doctrine-common"]
+	path = vendor/doctrine-common
+	url = git://github.com/doctrine/common.git
+[submodule "vendor/doctrine-dbal"]
+	path = vendor/doctrine-dbal
+	url = git://github.com/doctrine/dbal.git
+[submodule "vendor/twig"]
+	path = vendor/twig
+	url = https://github.com/fabpot/Twig.git
