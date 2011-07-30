@@ -7,9 +7,12 @@ Silex Blog Sample Application
 set up
 -------
 
+install::
+
 $ git clone git://github.com/brtriver/silex-sample-application.git silex-sample-application
 $ cd silex-sample-application 
 $ git submodule update --init
+
 
 notice: you have to create a database. see app/blog.php file.
 
