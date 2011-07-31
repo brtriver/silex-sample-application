@@ -1,4 +1,6 @@
 <?php
+use Symfony\Component\HttpFoundation\Response;
+
 // blog.php
 require_once __DIR__.'/../silex.phar';
 
@@ -21,7 +23,10 @@ $app->get('/', function () use ($app) {
     $posts = $sth->fetchAll();
     ob_start();
     require __DIR__ . '/../views/index.php';
-    return ob_get_clean();
+    return new Response(ob_get_clean(), 200, array(
+            'Cache-Control' => 's-maxage=15',
+        ));
+
 });
 
 // 詳細表示
@@ -32,7 +37,9 @@ $app->get('/{id}', function ($id) use ($app) {
     $post = $sth->fetch();
     ob_start();
     include __DIR__ . '/../views/view.php';
-    return ob_get_clean();
+    return new Response(ob_get_clean(), 200, array(
+            'Cache-Control' => 's-maxage=15',
+        ));
 });
 
 // アプリケーションのインスタンスを返す
