@@ -6,17 +6,12 @@ $app = new Silex\Application();
 $app['debug'] = true;
 
 // DB
-$app->register(new Silex\Extension\DoctrineExtension(), array(
-    'db.options'            => array(
-        'driver'    => 'pdo_mysql',
-        'host'      => 'localhost',
-		'dbname'	=> 'blog',
-		'user'		=> 'ichikawa',
-		'password'	=> 'hogehoge'
-    ),
-    'db.dbal.class_path'    => __DIR__.'/../vendor/doctrine-dbal/lib',
-    'db.common.class_path'  => __DIR__.'/../vendor/doctrine-common/lib',
-));
+$app['pdo'] =$app->share(function(){
+    $dsn = 'mysql:dbname=blog;host=localhost';
+    $user = 'ichikawa';
+    $password = 'hogehoge';
+    return new PDO($dsn, $user, $password); 
+});
 
 // Twig
 $app->register(new Silex\Extension\TwigExtension(), array(
@@ -29,14 +24,18 @@ $app['twig']->addFilter('nl2br', new Twig_Filter_Function('nl2br', array('is_saf
 // 一覧表示
 $app->get('/', function () use ($app) {
     $sql = "SELECT * FROM Posts";
-    $posts = $app['db']->fetchAll($sql);
+    $sth = $app['pdo']->prepare($sql);
+    $sth->execute();
+    $posts = $sth->fetchAll();
     return $app['twig']->render('index.twig.html', array('posts' => $posts));
 });
 
 // 詳細表示
 $app->get('/{id}', function ($id) use ($app) {
     $sql = "SELECT * FROM Posts WHERE id = ?";
-    $post = $app['db']->fetchAssoc($sql, array((int) $id));
+    $sth = $app['pdo']->prepare($sql);
+    $sth->execute(array((int)$id));
+    $post = $sth->fetch();
     return $app['twig']->render('view.twig.html', array('post' => $post));
 });
 
