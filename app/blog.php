@@ -18,26 +18,22 @@ $app->register(new Silex\Extension\DoctrineExtension(), array(
     'db.common.class_path'  => __DIR__.'/../vendor/doctrine-common/lib',
 ));
 
-// Twig
-$app->register(new Silex\Extension\TwigExtension(), array(
-    'twig.path'       => __DIR__.'/../views',
-    'twig.class_path' => __DIR__.'/../vendor/twig/lib',
-    'twig.options' => array('cache' => __DIR__.'/../cache'),
-));
-$app['twig']->addFilter('nl2br', new Twig_Filter_Function('nl2br', array('is_safe' => array('html'))));
-
 // 一覧表示
 $app->get('/', function () use ($app) {
     $sql = "SELECT * FROM Posts";
     $posts = $app['db']->fetchAll($sql);
-    return $app['twig']->render('index.twig.html', array('posts' => $posts));
+    ob_start();
+    require __DIR__ . '/../views/index.php';
+    return ob_get_clean();
 });
 
 // 詳細表示
 $app->get('/{id}', function ($id) use ($app) {
     $sql = "SELECT * FROM Posts WHERE id = ?";
     $post = $app['db']->fetchAssoc($sql, array((int) $id));
-    return $app['twig']->render('view.twig.html', array('post' => $post));
+    ob_start();
+    include __DIR__ . '/../views/view.php';
+    return ob_get_clean();
 });
 
 // アプリケーションのインスタンスを返す
