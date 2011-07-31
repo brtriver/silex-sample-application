@@ -22,6 +22,7 @@ $app->register(new Silex\Extension\DoctrineExtension(), array(
 $app->register(new Silex\Extension\TwigExtension(), array(
     'twig.path'       => __DIR__.'/../views',
     'twig.class_path' => __DIR__.'/../vendor/twig/lib',
+    'twig.options' => array('cache' => __DIR__.'/../cache'),
 ));
 $app['twig']->addFilter('nl2br', new Twig_Filter_Function('nl2br', array('is_safe' => array('html'))));
 
